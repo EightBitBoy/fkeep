@@ -10,3 +10,6 @@
 
 ## Add a dependency
 * Run `cargo add DEPENDENCY`.
+
+## Interesting libraries
+* https://crates.io/crates/xio
