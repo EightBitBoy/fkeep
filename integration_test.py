@@ -18,7 +18,40 @@ def test_no_arguments():
   #TODO Print to stdout?
   assert "error: the following required arguments were not provided" in result.stderr
 
-def test_success():
+def test_help():
+  result = run("-h")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+def test_success_3():
   result = run("3")
   assert result.exit_code == 0
   assert result.stdout == ""
+
+def test_success_5():
+  result = run("5")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+def test_success_3_verbose():
+  result = run("3 -v")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+def test_success_5_verbose():
+  result = run("5 -v")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+def test_success_3_verbose_verbose():
+  result = run("3 -vv")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+def test_success_5_verbose_verbose():
+  result = run("5 -vv")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+def test_dry_run():
+  pass
