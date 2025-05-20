@@ -1,13 +1,17 @@
 # pip install pytest
 # pip install cli-test-helpers
-# pytest -v --color=yes
+# pytest -v --color=yes --basetemp=./tmp_tests
 import pytest
+
 
 from cli_test_helpers import shell
 
+
 BINARY_PATH = "target/debug/fkeep"
 
-
+############
+# Fixtures #
+############
 @pytest.fixture
 def create_test_files():
     def _create(tmp_path, dirname="testdir", num_files=10):
@@ -24,12 +28,16 @@ def create_test_files():
     return _create
 
 
+###########
+# Helpers #
+###########
 def run(argumentsAndOptions = ""):
   return shell(BINARY_PATH + " " + argumentsAndOptions)
 
 
-
-
+#########
+# Tests #
+#########
 def test_no_arguments():
   result = run()
   #TODO Correct exit code for this?
