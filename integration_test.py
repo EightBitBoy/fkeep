@@ -29,7 +29,7 @@ def create_test_files():
         files = []
         for i in range(num_files):
             file = dir_path / f"file{i}.txt"
-            file.touch()
+            file.write_text(f"{i}")
             files.append(file)
         return dir_path, files
 
