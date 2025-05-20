@@ -60,18 +60,20 @@ def test_help():
   assert "Usage: fkeep" in result.stdout
 
 
-@pytest.mark.skip(reason="Not implemented")
-def test_success_3():
-  result = run("3")
+def test_success_3(tmp_path, create_test_files):
+  dir_path, files = create_test_files(tmp_path)
+  result = run(f"3 {str(dir_path)}")
   assert result.exit_code == 0
-  assert result.stdout == ""
+  assert len(list(dir_path.iterdir())) == 7
+  # assert result.stdout == ""
 
 
-@pytest.mark.skip(reason="Not implemented")
-def test_success_5():
-  result = run("5")
+def test_success_5(tmp_path, create_test_files):
+  dir_path, files = create_test_files(tmp_path)
+  result = run(f"5 {str(dir_path)}")
   assert result.exit_code == 0
-  assert result.stdout == ""
+  assert len(list(dir_path.iterdir())) == 5
+  # assert result.stdout == ""
 
 
 @pytest.mark.skip(reason="Not implemented")
