@@ -1,7 +1,9 @@
 # pip install pytest
 # pip install cli-test-helpers
 # pytest -v --color=yes --basetemp=./tmp_tests
+import os
 import pytest
+import time
 
 
 from cli_test_helpers import shell
@@ -26,10 +28,15 @@ def create_test_files():
         dir_path = tmp_path / dirname
         dir_path.mkdir()
 
+        base_time = time.time() - (2 * 60 * 60)
+
         files = []
         for i in range(num_files):
-            file = dir_path / f"file{i}.txt"
-            file.write_text(f"{i}")
+            file = dir_path / f"file_{i:03d}.txt"
+            file.write_text(f"{i:03d}")
+            # Modification time between files is one minute apart, simpler display with "ls -la"
+            modification_time = base_time + (i * 60)
+            os.utime(file, (modification_time, modification_time))
             files.append(file)
         return dir_path, files
 
