@@ -15,8 +15,10 @@
 * https://crates.io/crates/xio
 
 ## Todo
-Document dependencies
-https://python-poetry.org/
-https://github.com/pypa/pipx
-https://github.com/pypa/hatch
-@pytest.fixture(autouse=True)
+* Document dependencies
+* https://python-poetry.org/
+* https://github.com/pypa/pipx
+* https://github.com/pypa/hatch
+* @pytest.fixture(autouse=True)
+* https://python-basics-tutorial.readthedocs.io/de/25.1.0/test/pytest/builtin-fixtures.html#capsys
+* https://python-basics-tutorial.readthedocs.io/de/25.1.0/test/pytest/params.html
