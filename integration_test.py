@@ -9,6 +9,14 @@ from cli_test_helpers import shell
 
 BINARY_PATH = "target/debug/fkeep"
 
+
+###########
+# Helpers #
+###########
+def run(argumentsAndOptions = ""):
+  return shell(BINARY_PATH + " " + argumentsAndOptions)
+
+
 ############
 # Fixtures #
 ############
@@ -26,13 +34,6 @@ def create_test_files():
         return dir_path, files
 
     return _create
-
-
-###########
-# Helpers #
-###########
-def run(argumentsAndOptions = ""):
-  return shell(BINARY_PATH + " " + argumentsAndOptions)
 
 
 #########
