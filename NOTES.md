@@ -13,3 +13,10 @@
 
 ## Interesting libraries
 * https://crates.io/crates/xio
+
+## Todo
+Document dependencies
+https://python-poetry.org/
+https://github.com/pypa/pipx
+https://github.com/pypa/hatch
+@pytest.fixture(autouse=True)
