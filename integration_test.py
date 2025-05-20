@@ -32,11 +32,14 @@ def create_test_files():
 
         files = []
         for i in range(num_files):
-            file = dir_path / f"file_{i:03d}.txt"
-            file.write_text(f"{i:03d}")
-            # Modification time between files is one minute apart, simpler display with "ls -la"
-            modification_time = base_time + (i * 60)
+            file_number = i + 1
+
+            file = dir_path / f"file_{file_number:03d}.txt"
+            file.write_text(f"{file_number:03d}")
+
+            modification_time = base_time + (i * 60) # Modification time between files is one minute apart, simpler display with "ls -la"
             os.utime(file, (modification_time, modification_time))
+
             files.append(file)
         return dir_path, files
 
@@ -109,21 +112,20 @@ def test_dry_run():
   pass
 
 
-# For playing around with pytest
-def test_dir(tmp_path):
-  dir = tmp_path / "foo"
+##############
+# Playground #
+##############
+def test_tmp_path_fixture(tmp_path):
+  dir = tmp_path / "test"
   dir.mkdir()
-  file_1 = dir / "1.txt"
+  file_1 = dir / "one.txt"
   file_1.touch()
-  file_2 = dir / "2.txt"
+  file_2 = dir / "two.txt"
   file_2.touch()
   assert len(list(dir.iterdir())) == 2
 
-
-# For playing around with pytest
-def test_dir_2(tmp_path, create_test_files):
+def test_create_test_files_ficture(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
-
   assert dir_path.exists()
   assert len(files) == 10
   assert len(list(dir_path.iterdir())) == 10
