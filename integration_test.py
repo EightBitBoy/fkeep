@@ -65,12 +65,20 @@ def test_dry_run_3(tmp_path, create_test_files):
   "Dry run; would delete files" in result.stdout
 
 
-@pytest.mark.parametrize("number_of_files", range(1, 22))
+@pytest.mark.parametrize("number_of_files", range(1, 11))
 def test_success_parameterized(tmp_path, create_test_files, number_of_files):
-  dir_path, files = create_test_files(tmp_path, num_files = 20)
+  dir_path, files = create_test_files(tmp_path, num_files = 10)
   result = run(f"{number_of_files} {str(dir_path)}")
   assert result.exit_code == 0
   assert len(list(dir_path.iterdir())) == number_of_files
+  assert result.stdout == ""
+
+
+def test_larger_number_than_files(tmp_path, create_test_files):
+  dir_path, files = create_test_files(tmp_path)
+  result = run(f"11 {str(dir_path)}")
+  assert result.exit_code == 0
+  assert len(list(dir_path.iterdir())) == 10
   assert result.stdout == ""
 
 
