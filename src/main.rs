@@ -153,6 +153,7 @@ fn main() {
         display("Dry run; would delete files:");
         display_files(&files_to_delete);
     } else {
+        //TODO: Extract this to a function
         for file in &files_to_delete {
             match fs::remove_file(&file.path) {
                 Ok(_) => {
