@@ -23,6 +23,34 @@ struct FileInfo {
     modification_time: Option<SystemTime>,
 }
 
+fn get_files_in_directorry(path: &PathBuf) -> Vec<FileInfo> {
+    let mut files: Vec<FileInfo> = Vec::new();
+
+    match fs::read_dir(&path) {
+        Ok(entries) => {
+            for entry in entries.flatten() {
+                if let Ok(metadata) = entry.metadata() {
+                    if metadata.is_file() {
+                        let name = entry.file_name().to_string_lossy().to_string();
+                        let modification_time = metadata.modified().ok();
+                        files.push(FileInfo {
+                            path: entry.path(),
+                            name,
+                            modification_time,
+                        });
+                    }
+                }
+            }
+        }
+        Err(e) => {
+            eprintln!("Failed to read directory: {}", e);
+            std::process::exit(1);
+        }
+    }
+
+    files
+}
+
 fn main() {
     let args = Args::parse();
 
@@ -52,29 +80,7 @@ fn main() {
     //     }
     // }
 
-    let mut files: Vec<FileInfo> = Vec::new();
-
-    match fs::read_dir(&path) {
-        Ok(entries) => {
-            for entry in entries.flatten() {
-                if let Ok(metadata) = entry.metadata() {
-                    if metadata.is_file() {
-                        let name = entry.file_name().to_string_lossy().to_string();
-                        let modification_time = metadata.modified().ok();
-                        files.push(FileInfo {
-                            path: entry.path(),
-                            name,
-                            modification_time,
-                        });
-                    }
-                }
-            }
-        }
-        Err(e) => {
-            eprintln!("Failed to read directory: {}", e);
-            std::process::exit(1);
-        }
-    }
+    let mut files: Vec<FileInfo> = get_files_in_directorry(&path);
 
     // for file in &files {
     //     println!(
