@@ -14,10 +14,10 @@ struct Args {
     #[arg(value_parser = clap::value_parser!(PathBuf))]
     path: Option<PathBuf>,
 
-    #[arg(short = 'v', long = "verbose")]
+    #[arg(short = 'v', long = "verbose", default_value_t = false)]
     verbose: bool,
 
-    #[arg(short = 'd', long = "dry-run")]
+    #[arg(short = 'd', long = "dry-run", default_value_t = false)]
     dry_run: bool,
 }
 
@@ -144,16 +144,21 @@ fn main() {
     // let files_to_delete_new_2: Vec<FileInfo> = files.iter().take(args.number as usize).cloned().collect();
     let files_to_delete: Vec<FileInfo> = files.iter().take(args.number as usize).cloned().collect();
 
-    for file in &files_to_delete {
-        // println!("Deleting: {:?}", file.path.display());
-        match fs::remove_file(&file.path) {
-            Ok(_) => println!("Deleted: {}", file.path.display()),
-            Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
+    if args.dry_run {
+        for file in &files_to_delete {
+            println!("Dry run: Would delete: {}", file.path.display());
+        }
+    } else {
+        for file in &files_to_delete {
+            match fs::remove_file(&file.path) {
+                Ok(_) => println!("Deleted: {}", file.path.display()),
+                Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
+            }
         }
     }
 
-    if args.verbose {
-        display("Files to delete:");
-        display_files(&files_to_delete);
-    }
+    // if args.verbose {
+    //     display("Files to delete:");
+    //     display_files(&files_to_delete);
+    // }
 }
