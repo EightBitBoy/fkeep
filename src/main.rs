@@ -129,29 +129,35 @@ fn main() {
         a.modification_time.cmp(&b.modification_time)
     });
 
-    if args.verbose {
-        display_files(&files);
-    }
+    // if args.verbose {
+    //     display_files(&files);
+    // }
 
-    for file in &files {
-        println!(
-            "{:<40} | Modified: {:?}",
-            file.name,
-            file.modification_time
-        );
-    }
+    // for file in &files {
+    //     println!(
+    //         "{:<40} | Modified: {:?}",
+    //         file.name,
+    //         file.modification_time
+    //     );
+    // }
+
+    //TODO: Handle case that argument number is equal or larger than number of files
 
     // let files_to_delete_new_2: Vec<FileInfo> = files.iter().take(args.number as usize).cloned().collect();
-    let files_to_delete: Vec<FileInfo> = files.iter().take(args.number as usize).cloned().collect();
+    // let files_to_delete: Vec<FileInfo> = files.iter().take(args.number as usize).cloned().collect();
+    let mut files_to_delete: Vec<FileInfo> = files.clone();
+    files_to_delete = files_to_delete.split_off(args.number as usize);
+
 
     if args.dry_run {
         for file in &files_to_delete {
-            println!("Dry run: Would delete: {}", file.path.display());
+            println!("Dry run; would delete files: {}", file.path.display());
         }
     } else {
         for file in &files_to_delete {
             match fs::remove_file(&file.path) {
-                Ok(_) => println!("Deleted: {}", file.path.display()),
+                // Ok(_) => println!("Deleted: {}", file.path.display()),
+                Ok(_) => {},
                 Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
             }
         }

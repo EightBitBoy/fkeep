@@ -62,22 +62,42 @@ def test_help():
   assert result.exit_code == 0
   assert "Usage: fkeep" in result.stdout
 
+def test_dry_run_3(tmp_path, create_test_files):
+  dir_path, files = create_test_files(tmp_path)
+  result = run(f"3 {str(dir_path)} -d")
+  assert result.exit_code == 0
+  assert len(list(dir_path.iterdir())) == 10
+  assert result.stdout != ""
+  "Dry run; would delete files" in result.stdout
 
+#TODO: Parametrize this test
 def test_success_3(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"3 {str(dir_path)}")
   assert result.exit_code == 0
-  assert len(list(dir_path.iterdir())) == 7
-  # assert result.stdout == ""
+  assert len(list(dir_path.iterdir())) == 3
+  assert result.stdout == ""
 
+def test_success_4(tmp_path, create_test_files):
+  dir_path, files = create_test_files(tmp_path)
+  result = run(f"4 {str(dir_path)}")
+  assert result.exit_code == 0
+  assert len(list(dir_path.iterdir())) == 4
+  assert result.stdout == ""
 
 def test_success_5(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"5 {str(dir_path)}")
   assert result.exit_code == 0
   assert len(list(dir_path.iterdir())) == 5
-  # assert result.stdout == ""
+  assert result.stdout == ""
 
+def test_success_6(tmp_path, create_test_files):
+  dir_path, files = create_test_files(tmp_path)
+  result = run(f"6 {str(dir_path)}")
+  assert result.exit_code == 0
+  assert len(list(dir_path.iterdir())) == 6
+  assert result.stdout == ""
 
 @pytest.mark.skip(reason="Not implemented")
 def test_success_3_verbose():
