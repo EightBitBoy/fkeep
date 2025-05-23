@@ -46,23 +46,16 @@ def create_test_files():
     return _create
 
 
-#########
-# Tests #
-#########
-def test_no_arguments():
-  result = run()
-  #TODO Correct exit code for this?
-  assert result.exit_code == 2
-  #TODO Print to stdout?
-  assert "error: the following required arguments were not provided" in result.stderr
-
-
+####################
+# Successful tests #
+####################
 def test_display_help():
   result = run("-h")
   assert result.exit_code == 0
   assert "Usage: fkeep" in result.stdout
 
 
+#TODO: Parametrize!
 def test_dry_run_3(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"3 {str(dir_path)} -d")
@@ -81,6 +74,31 @@ def test_success_parameterized(tmp_path, create_test_files, number_of_files):
   assert result.stdout == ""
 
 
+@pytest.mark.skip(reason="Not implemented")
+def test_success_3_verbose():
+  result = run("3 -v")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+
+@pytest.mark.skip(reason="Not implemented")
+def test_success_3_verbose_verbose():
+  result = run("3 -vv")
+  assert result.exit_code == 0
+  assert result.stdout == ""
+
+
+#################
+# Failing tests #
+#################
+def test_no_arguments():
+  result = run()
+  #TODO Correct exit code for this?
+  assert result.exit_code == 2
+  #TODO Print to stdout?
+  assert "error: the following required arguments were not provided" in result.stderr
+
+
 def test_fail_zero(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"0 {str(dir_path)}")
@@ -95,39 +113,6 @@ def test_fail_negative(tmp_path, create_test_files):
   assert result.exit_code == 1
   assert len(list(dir_path.iterdir())) == 10
   assert result.stdout == "The number of files to keep must be greater than 0."
-
-
-@pytest.mark.skip(reason="Not implemented")
-def test_success_3_verbose():
-  result = run("3 -v")
-  assert result.exit_code == 0
-  assert result.stdout == ""
-
-
-@pytest.mark.skip(reason="Not implemented")
-def test_success_5_verbose():
-  result = run("5 -v")
-  assert result.exit_code == 0
-  assert result.stdout == ""
-
-
-@pytest.mark.skip(reason="Not implemented")
-def test_success_3_verbose_verbose():
-  result = run("3 -vv")
-  assert result.exit_code == 0
-  assert result.stdout == ""
-
-
-@pytest.mark.skip(reason="Not implemented")
-def test_success_5_verbose_verbose():
-  result = run("5 -vv")
-  assert result.exit_code == 0
-  assert result.stdout == ""
-
-
-@pytest.mark.skip(reason="Not implemented")
-def test_dry_run():
-  pass
 
 
 ##############
