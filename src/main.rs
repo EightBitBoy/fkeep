@@ -14,9 +14,15 @@ struct Args {
     #[arg(value_parser = clap::value_parser!(PathBuf))]
     path: Option<PathBuf>,
 
-    //TODO Implement dry run option and logic!
+    #[arg(short = 'v', long = "verbose")]
+    verbose: bool,
+
+    #[arg(short = 'd', long = "dry-run")]
+    dry_run: bool,
 }
 
+//TODO Read about this trait!
+#[derive(Clone)]
 struct FileInfo {
     path: PathBuf,
     name: String,
@@ -50,6 +56,21 @@ fn get_files_in_directorry(path: &PathBuf) -> Vec<FileInfo> {
 
     files
 }
+
+
+fn display(content: &str) {
+    println!("{}", content);
+}
+
+
+fn display_files(files: &Vec<FileInfo>) {
+    for file in files {
+        println!("{}",
+            file.path.display()
+        );
+    }
+}
+
 
 fn main() {
     let args = Args::parse();
@@ -102,9 +123,15 @@ fn main() {
     // }
 
     //oldest first
+
+
     files.sort_by(|a, b| {
         a.modification_time.cmp(&b.modification_time)
     });
+
+    if args.verbose {
+        display_files(&files);
+    }
 
     for file in &files {
         println!(
@@ -114,12 +141,19 @@ fn main() {
         );
     }
 
-    let files_to_delete = &files[..args.number as usize];
-    for file in files_to_delete {
+    // let files_to_delete_new_2: Vec<FileInfo> = files.iter().take(args.number as usize).cloned().collect();
+    let files_to_delete: Vec<FileInfo> = files.iter().take(args.number as usize).cloned().collect();
+
+    for file in &files_to_delete {
         // println!("Deleting: {:?}", file.path.display());
         match fs::remove_file(&file.path) {
             Ok(_) => println!("Deleted: {}", file.path.display()),
             Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
         }
+    }
+
+    if args.verbose {
+        display("Files to delete:");
+        display_files(&files_to_delete);
     }
 }
