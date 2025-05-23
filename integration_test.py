@@ -57,10 +57,11 @@ def test_no_arguments():
   assert "error: the following required arguments were not provided" in result.stderr
 
 
-def test_help():
+def test_display_help():
   result = run("-h")
   assert result.exit_code == 0
   assert "Usage: fkeep" in result.stdout
+
 
 def test_dry_run_3(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
@@ -70,34 +71,31 @@ def test_dry_run_3(tmp_path, create_test_files):
   assert result.stdout != ""
   "Dry run; would delete files" in result.stdout
 
-#TODO: Parametrize this test
-def test_success_3(tmp_path, create_test_files):
-  dir_path, files = create_test_files(tmp_path)
-  result = run(f"3 {str(dir_path)}")
+
+@pytest.mark.parametrize("number_of_files", range(1, 11))
+def test_success_parameterized(tmp_path, create_test_files, number_of_files):
+  dir_path, files = create_test_files(tmp_path, num_files = 20)
+  result = run(f"{number_of_files} {str(dir_path)}")
   assert result.exit_code == 0
-  assert len(list(dir_path.iterdir())) == 3
+  assert len(list(dir_path.iterdir())) == number_of_files
   assert result.stdout == ""
 
-def test_success_4(tmp_path, create_test_files):
-  dir_path, files = create_test_files(tmp_path)
-  result = run(f"4 {str(dir_path)}")
-  assert result.exit_code == 0
-  assert len(list(dir_path.iterdir())) == 4
-  assert result.stdout == ""
 
-def test_success_5(tmp_path, create_test_files):
+def test_fail_zero(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
-  result = run(f"5 {str(dir_path)}")
-  assert result.exit_code == 0
-  assert len(list(dir_path.iterdir())) == 5
-  assert result.stdout == ""
+  result = run(f"0 {str(dir_path)}")
+  assert result.exit_code == 1
+  assert len(list(dir_path.iterdir())) == 10
+  assert result.stdout == "The number of files to keep must be greater than 0."
 
-def test_success_6(tmp_path, create_test_files):
+
+def test_fail_negative(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
-  result = run(f"6 {str(dir_path)}")
-  assert result.exit_code == 0
-  assert len(list(dir_path.iterdir())) == 6
-  assert result.stdout == ""
+  result = run(f"-1 {str(dir_path)}")
+  assert result.exit_code == 1
+  assert len(list(dir_path.iterdir())) == 10
+  assert result.stdout == "The number of files to keep must be greater than 0."
+
 
 @pytest.mark.skip(reason="Not implemented")
 def test_success_3_verbose():
