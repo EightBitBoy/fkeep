@@ -150,21 +150,18 @@ fn main() {
 
 
     if args.dry_run {
-        for file in &files_to_delete {
-            println!("Dry run; would delete files: {}", file.path.display());
-        }
+        display("Dry run; would delete files:");
+        display_files(&files_to_delete);
     } else {
         for file in &files_to_delete {
             match fs::remove_file(&file.path) {
-                // Ok(_) => println!("Deleted: {}", file.path.display()),
-                Ok(_) => {},
+                Ok(_) => {
+                    if args.verbose {
+                        println!("Deleted: {}", file.path.display());
+                    }
+                },
                 Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
             }
         }
     }
-
-    // if args.verbose {
-    //     display("Files to delete:");
-    //     display_files(&files_to_delete);
-    // }
 }
