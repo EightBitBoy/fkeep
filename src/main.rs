@@ -29,6 +29,21 @@ struct FileInfo {
     modification_time: Option<SystemTime>,
 }
 
+
+fn display(content: &str) {
+    println!("{}", content);
+}
+
+
+fn display_files(files: &Vec<FileInfo>) {
+    for file in files {
+        println!("{}",
+            file.path.display()
+        );
+    }
+}
+
+
 fn get_files_in_directorry(path: &PathBuf) -> Vec<FileInfo> {
     let mut files: Vec<FileInfo> = Vec::new();
 
@@ -55,20 +70,6 @@ fn get_files_in_directorry(path: &PathBuf) -> Vec<FileInfo> {
     }
 
     files
-}
-
-
-fn display(content: &str) {
-    println!("{}", content);
-}
-
-
-fn display_files(files: &Vec<FileInfo>) {
-    for file in files {
-        println!("{}",
-            file.path.display()
-        );
-    }
 }
 
 
