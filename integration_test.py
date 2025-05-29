@@ -10,6 +10,7 @@ from cli_test_helpers import shell
 
 
 BINARY_PATH = "target/debug/fkeep"
+DEFAULT_NUMBER_OF_FILES = 10
 
 
 ###########
@@ -24,7 +25,7 @@ def run(argumentsAndOptions = ""):
 ############
 @pytest.fixture
 def create_test_files():
-    def _create(tmp_path, dirname="testdir", num_files=10):
+    def _create(tmp_path, dirname="testdir", num_files=DEFAULT_NUMBER_OF_FILES):
         dir_path = tmp_path / dirname
         dir_path.mkdir()
 
@@ -60,14 +61,14 @@ def test_dry_run_3(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"3 {str(dir_path)} -d")
   assert result.exit_code == 0
-  assert len(list(dir_path.iterdir())) == 10
+  assert len(list(dir_path.iterdir())) == DEFAULT_NUMBER_OF_FILES
   assert result.stdout != ""
   "Dry run; would delete files" in result.stdout
 
 
 @pytest.mark.parametrize("number_of_files", range(1, 11))
 def test_success_parameterized(tmp_path, create_test_files, number_of_files):
-  dir_path, files = create_test_files(tmp_path, num_files = 10)
+  dir_path, files = create_test_files(tmp_path)
   result = run(f"{number_of_files} {str(dir_path)}")
   assert result.exit_code == 0
   assert len(list(dir_path.iterdir())) == number_of_files
@@ -78,7 +79,7 @@ def test_larger_number_than_files(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"11 {str(dir_path)}")
   assert result.exit_code == 0
-  assert len(list(dir_path.iterdir())) == 10
+  assert len(list(dir_path.iterdir())) == DEFAULT_NUMBER_OF_FILES
   assert result.stdout == ""
 
 
@@ -112,7 +113,7 @@ def test_fail_zero(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"0 {str(dir_path)}")
   assert result.exit_code == 1
-  assert len(list(dir_path.iterdir())) == 10
+  assert len(list(dir_path.iterdir())) == DEFAULT_NUMBER_OF_FILES
   assert result.stdout == "The number of files to keep must be greater than 0."
 
 
@@ -121,7 +122,7 @@ def test_fail_negative(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   result = run(f"-1 {str(dir_path)}")
   assert result.exit_code == 1
-  assert len(list(dir_path.iterdir())) == 10
+  assert len(list(dir_path.iterdir())) == DEFAULT_NUMBER_OF_FILES
   assert result.stdout == "The number of files to keep must be greater than 0."
 
 
@@ -137,8 +138,8 @@ def test_tmp_path_fixture(tmp_path):
   file_2.touch()
   assert len(list(dir.iterdir())) == 2
 
-def test_create_test_files_ficture(tmp_path, create_test_files):
+def test_create_test_files_fixture(tmp_path, create_test_files):
   dir_path, files = create_test_files(tmp_path)
   assert dir_path.exists()
-  assert len(files) == 10
-  assert len(list(dir_path.iterdir())) == 10
+  assert len(files) == DEFAULT_NUMBER_OF_FILES
+  assert len(list(dir_path.iterdir())) == DEFAULT_NUMBER_OF_FILES
