@@ -52,7 +52,7 @@ fn get_files_in_directorry(path: &PathBuf) -> Vec<FileInfo> {
             for entry in entries.flatten() {
                 if let Ok(metadata) = entry.metadata() {
                     if metadata.is_file() {
-                        let name = entry.file_name().to_string_lossy().to_string();
+                        // let name = entry.file_name().to_string_lossy().to_string();
                         let modification_time = metadata.modified().ok();
                         files.push(FileInfo {
                             path: entry.path(),
@@ -73,10 +73,24 @@ fn get_files_in_directorry(path: &PathBuf) -> Vec<FileInfo> {
 }
 
 
+fn delete_files(files: &Vec<FileInfo>, args: &Args) {
+    for file in files {
+        match fs::remove_file(&file.path) {
+            Ok(_) => {
+                if args.verbose {
+                    println!("Deleted: {}", file.path.display());
+                }
+            },
+            Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
+        }
+    }
+}
+
+
 fn main() {
     let args = Args::parse();
 
-    let path = args.path.unwrap_or_else(|| {
+    let path: PathBuf = args.path.clone().unwrap_or_else(|| {
         env::current_dir().expect("Error: Failed to get current directory.")
     });
 
@@ -154,16 +168,17 @@ fn main() {
         display("Dry run; would delete files:");
         display_files(&files_to_delete);
     } else {
+        delete_files(&files_to_delete, &args);
         //TODO: Extract this to a function
-        for file in &files_to_delete {
-            match fs::remove_file(&file.path) {
-                Ok(_) => {
-                    if args.verbose {
-                        println!("Deleted: {}", file.path.display());
-                    }
-                },
-                Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
-            }
-        }
+        // for file in &files_to_delete {
+        //     match fs::remove_file(&file.path) {
+        //         Ok(_) => {
+        //             if args.verbose {
+        //                 println!("Deleted: {}", file.path.display());
+        //             }
+        //         },
+        //         Err(e) => eprintln!("Failed to delete {}: {}", file.path.display(), e),
+        //     }
+        // }
     }
 }
