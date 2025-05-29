@@ -22,3 +22,6 @@
 * @pytest.fixture(autouse=True)
 * https://python-basics-tutorial.readthedocs.io/de/25.1.0/test/pytest/builtin-fixtures.html#capsys
 * https://python-basics-tutorial.readthedocs.io/de/25.1.0/test/pytest/params.html
+
+## Integration tests
+* Ignore test with annotation: `@pytest.mark.skip(reason="Not implemented")`

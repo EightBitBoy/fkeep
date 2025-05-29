@@ -25,7 +25,7 @@ struct Args {
 #[derive(Clone)]
 struct FileInfo {
     path: PathBuf,
-    name: String,
+    // name: String,
     modification_time: Option<SystemTime>,
 }
 
@@ -41,7 +41,7 @@ fn get_files_in_directorry(path: &PathBuf) -> Vec<FileInfo> {
                         let modification_time = metadata.modified().ok();
                         files.push(FileInfo {
                             path: entry.path(),
-                            name,
+                            // name,
                             modification_time,
                         });
                     }
